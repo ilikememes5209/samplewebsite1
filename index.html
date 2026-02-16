@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html style="background-color:black;">
+  <head>
+    <title>homepage</title>
+    <link rel="stylesheet" href="styles.css"
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+  </head>
+  <body>
+     <header class="main-header">
+         <a class="pagelink" href="index.html">Home</a>
+       <a class="pagelink" href="page1.html">About Us</a>
+     <a class="pagelink" href="page2.html">Download</a>
+     </header>
+     <header id="dismissible-header">
+        <button id="close-btn" onclick="hideHeader()">X</button>
+    <h3>Sample file 2.0 is now available. <a class="headerlink" href="page2.html"> Download Now</a></h3>
+</header>
+     <div class="image-container">
+       <img src="https://uploads.onecompiler.io/43drc755v/44cu8bhf4/code-1839406_1280.jpg"> 
+     <h1>Website</h1>
+     </div>
+     <div style="color:white; font-family:Inter;width:100%;display:flex;justify-content:center;align-items:center;"><h1 style="background-color:#2b2b2b;border-radius:30px;margin:10px;padding:10px">this is a header contained in a div</h1></div>
+     <div class="info-container">
+       <div>
+         <img class="container-image" src="https://uploads.onecompiler.io/43drc755v/44cu8bhf4/code-1839406_1280.jpg">
+         <h2 class="info-header">This is a container</h2>
+         <p class="info-text">
+             This is sample text
+         <br>This is sample text
+         <br>This is sample text
+         <br>This is sample text
+         <br>This is sample text
+         </p>
+       </div>
+       
+       <div>
+         <img class="container-image" src="https://uploads.onecompiler.io/43drc755v/44cu8bhf4/code-1839406_1280.jpg">
+         <h2 class="info-header">This is a container</h2>
+         <p class="info-text">
+             This is sample text
+         <br>This is sample text
+         <br>This is sample text
+         <br>This is sample text
+         <br>This is sample text
+         </p>
+       </div>
+       
+       <div>
+         <img class="container-image" src="https://uploads.onecompiler.io/43drc755v/44cu8bhf4/code-1839406_1280.jpg">
+         <h2 class="info-header">This is a container</h2>
+         <p class="info-text">
+             This is sample text
+         <br>This is sample text
+         <br>This is sample text
+         <br>This is sample text
+         <br>This is sample text
+         </p>
+       </div>
+       
+     </div>
+  <script>
+    function hideHeader() {
+    let headerElement = document.getElementById("dismissible-header");
+    // Add the 'hidden' class to the header to hide it
+    headerElement.classList.add("hidden");
+}
+  </script>
+  </body>
+</html>
