@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en-US" style="background-color:black;">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+    <meta name="description" content="Sample website showcasing modern web design, responsive layouts, and SEO-friendly structure. Explore a clean, fast, and mobile-ready demo site.">
+    <link rel="shortcut icon" href="https://uploads.onecompiler.io/43drc755v/44cu8bhf4/favicon.ico" />
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+  </head>
+  <body>
+  <header class="main-header">
+         <button class="hamburger" onclick="toggleMenu()">☰</button>
+         <nav class="nav-links">
+           <a class="pagelink" href="index.html">Home</a>
+           <a class="pagelink" href="page1.html">About Us</a>
+           <a class="pagelink" href="page2.html">Download</a>
+           <a class="pagelink" href="page3.html">Calculator</a>
+           <a class="pagelink" href="page4.html">Game</a>
+           <a class="pagelink" href="page5.html">CMD Line</a>
+           <a class="pagelink" href="page6.html">Map</a>
+           <a class="pagelink" href="page7.html">AI</a>
+           <a class="pagelink" href="page8.html">Notes</a>
+           <a class="pagelink" href="page9.html">Portfolio</a>
+           
+         </nav>
+         <span id="time-display" class="time-display"></span>
+     </header>
+     <div class="image-container">
+       <img src="https://uploads.onecompiler.io/43drc755v/44cu8bhf4/code-1839406_1280.jpg"alt="picture of code"> 
+     <h1>Calculator</h1>
+     </div>
+<div class="calculator-container">
+       <div class="calculator">
+         <div class="display" id="display">0</div>
+         <div class="buttons">
+           <button onclick="clearDisplay()" class="btn btn-clear">C</button>
+           <button onclick="appendOperator('/')" class="btn btn-operator">/</button>
+           <button onclick="appendOperator('*')" class="btn btn-operator">×</button>
+           <button onclick="deleteLast()" class="btn btn-operator">←</button>
+           
+           <button onclick="appendNumber('7')" class="btn">7</button>
+           <button onclick="appendNumber('8')" class="btn">8</button>
+           <button onclick="appendNumber('9')" class="btn">9</button>
+           <button onclick="appendOperator('-')" class="btn btn-operator">-</button>
+           
+           <button onclick="appendNumber('4')" class="btn">4</button>
+           <button onclick="appendNumber('5')" class="btn">5</button>
+           <button onclick="appendNumber('6')" class="btn">6</button>
+           <button onclick="appendOperator('+')" class="btn btn-operator">+</button>
+           
+           <button onclick="appendNumber('1')" class="btn">1</button>
+           <button onclick="appendNumber('2')" class="btn">2</button>
+           <button onclick="appendNumber('3')" class="btn">3</button>
+           <button onclick="appendNumber('.')" class="btn">.</button>
+           
+           <button onclick="appendNumber('0')" class="btn btn-zero">0</button>
+           <button onclick="calculate()" class="btn btn-equals">=</button>
+         </div>
+       </div>
+     </div>
+     <footer class="footertext">
+        <p>Copyright 2026</p>
+        <p>Contact us at <a class="footerlink" href="mailto:coltonblake125@gmail.com">Email Us</a></p>
+         <p>Made by Colton Blake</p>
+     </footer>
+     <script src="script.js"></script>
+  </body>
+</html>
