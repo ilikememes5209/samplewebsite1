@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en-US" style="background-color:black;">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI</title>
+        <meta name="description" content="Sample website showcasing modern web design, responsive layouts, and SEO-friendly structure. Explore a clean, fast, and mobile-ready demo site.">
+    
+        <link rel="shortcut icon" type="image/x-icon" href="favicon.ico"/>
+        <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <style>
+      .chatbot-container {
+        max-width: 800px;
+        margin: 30px auto;
+        background: #1a1a1a;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+        display: flex;
+        flex-direction: column;
+        height: 600px;
+        font-family: 'Inter', sans-serif;
+      }
+
+      .chat-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 20px;
+        font-size: 1.3em;
+        font-weight: bold;
+        font-family: 'Inter', sans-serif;
+      }
+
+      .chat-messages {
+        flex: 1;
+        overflow-y: auto;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .message {
+        display: flex;
+        gap: 10px;
+        animation: slideIn 0.3s ease;
+      }
+
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .message.user {
+        justify-content: flex-end;
+      }
+
+      .message.ai {
+        justify-content: flex-start;
+      }
+
+      .message-content {
+        max-width: 70%;
+        padding: 12px 16px;
+        border-radius: 8px;
+        word-wrap: break-word;
+        font-family: 'Inter', sans-serif;
+      }
+
+      .user .message-content {
+        background: #667eea;
+        color: white;
+      }
+
+      .ai .message-content {
+        background: #333;
+        color: #e0e0e0;
+        border: 1px solid #444;
+      }
+
+      .chat-input-area {
+        padding: 15px;
+        border-top: 1px solid #333;
+        display: flex;
+        gap: 10px;
+      }
+
+      .chat-input-area input {
+        flex: 1;
+        padding: 12px;
+        border: 1px solid #444;
+        background: #222;
+        color: #fff;
+        border-radius: 5px;
+        font-family: 'Inter', sans-serif;
+        font-size: 1em;
+      }
+
+      .chat-input-area input:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
+      }
+
+      .chat-input-area button {
+        padding: 12px 24px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: transform 0.2s;
+        font-family: 'Inter', sans-serif;
+      }
+
+      .chat-input-area button:hover {
+        transform: translateY(-2px);
+      }
+
+      .chat-input-area button:active {
+        transform: translateY(0);
+      }
+
+      .typing-indicator {
+        display: flex;
+        gap: 4px;
+        padding: 12px 16px;
+      }
+
+      .typing-indicator span {
+        width: 8px;
+        height: 8px;
+        background: #667eea;
+        border-radius: 50%;
+        animation: typing 1.4s infinite;
+      }
+
+      .typing-indicator span:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+
+      .typing-indicator span:nth-child(3) {
+        animation-delay: 0.4s;
+      }
+
+      @keyframes typing {
+        0%, 60%, 100% {
+          opacity: 0.5;
+          transform: translateY(0);
+        }
+        30% {
+          opacity: 1;
+          transform: translateY(-10px);
+        }
+      }
+    </style>
+  <script>
+  window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
+</head>
+  <body>
+   <header class="main-header">
+         <button class="hamburger" onclick="toggleMenu()">☰</button>
+         <nav class="nav-links">
+           <a class="pagelink" href="index.html">Home</a>
+           <a class="pagelink" href="page1.html">About Us</a>
+           <a class="pagelink" href="page2.html">Download</a>
+           <a class="pagelink" href="page3.html">Calculator</a>
+           <a class="pagelink" href="page4.html">Game</a>
+           <a class="pagelink" href="page5.html">CMD Line</a>
+           <a class="pagelink" href="page6.html">Map</a>
+            <a class="pagelink" href="page7.html">AI</a>
+            <a class="pagelink" href="page8.html">Notes</a>
+            <a class="pagelink" href="page9.html">Portfolio</a>
+           
+         </nav>
+         <span id="time-display" class="time-display"></span>
+     </header>
+     <div class="image-container">
+       <img src="photo-1461749280684-dccba630e2f6.avif" fetchpriority="high" alt="picture of code">  
+       <h1>AI</h1>
+     </div>
+
+     <!-- Chatbot Container -->
+     <div class="chatbot-container">
+       <div class="chat-header"> AI Assistant</div>
+       <div class="chat-messages" id="chatMessages"></div>
+       <div class="chat-input-area">
+         <input 
+           type="text" 
+           id="userInput" 
+           placeholder="Type your message..." 
+           onkeypress="handleChatKeypress(event)"
+         >
+         <button onclick="sendMessage()">Send</button>
+       </div>
+     </div>
+
+     <footer class="footertext">
+        <p>Copyright 2026</p>
+        <p>Contact us at <a class="footerlink" href="mailto:coltonblake125@gmail.com">Email Us</a></p>
+         <p>Made by Colton Blake</p>
+     </footer>
+     <script src="script.js"></script>
+     <script>
+       // AI Chatbot Implementation
+       const aiResponses = {
+         greeting: [
+           'Hello! How can I help you today?',
+           'Hi there! What can I do for you?',
+           'Hey! How\'s it going?',
+           'Greetings! What\'s on your mind?',
+           'Welcome! What brings you here?',
+           'Hello! Nice to meet you!',
+           'Hi! Ready to help!',
+           'Howdy! What do you need?'
+         ],
+         farewell: [
+           'Goodbye! Have a great day!',
+           'See you later!',
+           'Take care!',
+           'Hasta la vista!',
+           'Bye! Come back soon!',
+           'Farewell, friend!',
+           'See you next time!',
+           'Take it easy!'
+         ],
+         thanks: [
+           'You\'re welcome! Happy to help.',
+           'Glad I could assist!',
+           'Anytime! That\'s what I\'m here for.',
+           'My pleasure!',
+           'Happy to help!'
+         ],
+         help: [
+           'I can help with many topics! Try asking me about:\n- Programming (Python, JavaScript, HTML, CSS, etc.)\n- General knowledge and trivia\n- Weather and time\n- Math problems\n- Jokes and riddles\n- Life advice\n- Fun facts\n- Technology\n- Science\n- And so much more!',
+           'I\'m here to assist! Feel free to ask me anything you\'d like.',
+           'I can discuss programming, answer questions about almost anything, tell jokes, solve math problems, and more!'
+         ],
+         weather: [
+           'I can tell you the weather if you grant me access to your location!',
+           'The weather varies by location. What\'s your location?',
+           'Weather varies by place. Would you like to know the weather for a specific location?'
+         ],
+         time: [
+           `The current time is ${new Date().toLocaleTimeString()}`,
+           `It's ${new Date().toLocaleTimeString()} right now`,
+           `Currently, it's ${new Date().toLocaleTimeString()}`
+         ],
+         date: [
+           `Today is ${new Date().toLocaleDateString()}`,
+           `The date is ${new Date().toLocaleDateString()}`,
+           `It's ${new Date().toLocaleDateString()} today`
+         ],
+         joke: [
+           'Why do programmers prefer dark mode? Because light attracts bugs!',
+           'How many programmers does it take to change a light bulb? None, that\'s a hardware problem.',
+           'Why did the developer go broke? Because he lost his domain.',
+           'Why do Java developers wear glasses? Because they don\'t C#!',
+           'What do you call a programmer from Finland? Nerdic!',
+           'Why did the programmer quit his job? Because he didn\'t get arrays.',
+           'How do you comfort a JavaScript bug? You console it!',
+           'Why do Java developers wear glasses? Because they can\'t C#.',
+           'What\'s a programmer\'s favorite place to hang out? Foo Bar!',
+           'Why do programmers always get Christmas and Halloween mixed up? Because DEC 25 = OCT 31!'
+         ],
+         funfact: [
+           'Did you know? Honey never spoils. Archaeologists have found 3000-year-old honey in Egyptian tombs that was still edible!',
+           'Fun fact: A group of flamingos is called a \"flamboyance\"!',
+           'Did you know? Octopuses have three hearts!',
+           'Fun fact: Bananas are berries, but strawberries aren\'t!',
+           'Did you know? The Eiffel Tower can be 15 cm taller during summer due to thermal expansion!',
+           'Fun fact: A day on Venus is longer than its year!',
+           'Did you know? Honey badgers are listed in the Guinness Book of World Records as the most fearless animal!',
+           'Fun fact: Penguins have knees! You just can\'t see them.',
+           'Did you know? A group of pugs is called a \"grumble\"!',
+           'Fun fact: The shortest war in history lasted only 38 minutes!'
+         ],
+         motivation: [
+           'You got this! Keep pushing towards your goals! 💪',
+           'Remember: every expert was once a beginner.',
+           'Don\'t give up! The best time to plant a tree was 20 years ago. The second best time is now.',
+           'Believe in yourself! You\'re capable of amazing things.',
+           'Every small step brings you closer to your goal!',
+           'You\'re doing great! Keep up the momentum!',
+           'The only way to do great work is to love what you do.',
+           'Your potential is limitless!'
+         ],
+         programming: [
+           'JavaScript is the language of the web! HTML/CSS for structure and styling, JavaScript for interactivity.',
+           'Python is great for beginners and widely used in data science and automation!',
+           'Version control with Git is essential for any developer. This site uses JavaScript, HTML, and CSS!',
+           'APIs allow different programs to communicate with each other.',
+           'Debugging is an important part of programming. Always use console.log or a debugger!',
+           'Functions help organize code and make it reusable.',
+           'Variables store data that your programs can work with.',
+           'Loops let you repeat code multiple times efficiently.'
+         ],
+         science: [
+           'Physics explains how the universe works!',
+           'Chemistry is the study of matter and reactions between substances.',
+           'Biology is the study of living organisms.',
+           'Quantum mechanics is fascinating - particles can exist in multiple states simultaneously!',
+           'Einstein\'s theory of relativity changed how we understand space and time.'
+         ],
+         tech: [
+           'Artificial Intelligence is expanding rapidly and changing many industries.',
+           'Machine Learning allows computers to learn from data without being explicitly programmed.',
+           'Cloud computing allows you to access computing resources over the internet.',
+           'Cybersecurity is crucial in protecting data from unauthorized access.',
+           'Blockchain technology powers cryptocurrencies and has many other applications.'
+         ],
+         advice: [
+           'Remember to take breaks! Your mental health is important.',
+           'Drink water - staying hydrated helps you focus and feel better!',
+           'Exercise regularly - it\'s good for both body and mind.',
+           'Get enough sleep - it\'s when your body and brain recover!',
+           'Don\'t compare your beginning to someone else\'s middle. Everyone\'s journey is unique!',
+           'It\'s okay to ask for help. No one succeeds completely alone.',
+           'Persistence beats perfection. Keep trying!'
+         ],
+         riddle: [
+           'Riddle: What has hands but cannot clap? Answer: A clock! 🕐',
+           'Riddle: What has a city but no houses? Answer: A map! 🗺️',
+           'Riddle: What can run but never walks? Answer: Water! 💧',
+           'Riddle: What has a heart that doesn\'t beat? Answer: An artichoke! 🌱',
+           'Riddle: What can travel around the world while staying in a corner? Answer: A stamp! 📮'
+         ],
+         name: [
+           'I\'m an AI Assistant here to help you with anything!',
+           'I\'m your friendly AI helper!',
+           'You can call me AI! I\'m here to assist.',
+           'I\'m an artificial intelligence assistant, ready to chat!'
+         ],
+         love: [
+           'That\'s sweet! Love is a beautiful emotion.',
+           'Love makes the world go around! 💕',
+           'Spread the love around!',
+           'Love is patient, love is kind!'
+         ],
+         howami: [
+           'I\'m doing great, thanks for asking! How about you?',
+           'I\'m functioning perfectly! How are you?',
+           'All systems nominal! What about you?',
+           'Feeling good and ready to help! How are you?'
+         ],
+         weather_detail: [
+           'Weather depends on temperature, humidity, pressure, and wind patterns.',
+           'Extreme weather can include hurricanes, tornadoes, and blizzards.',
+           'Climate is different from weather - climate is long-term patterns.'
+         ],
+         planet: [
+           'Earth is our home planet - the only known planet with life!',
+           'Mars is called the Red Planet due to iron oxide in its soil.',
+           'Jupiter is the largest planet in our solar system.',
+           'Saturn is famous for its beautiful rings.',
+           'Venus is the hottest planet despite not being closest to the sun.'
+         ],
+         space: [
+           'Space is vast - the universe is almost incomprehensibly large!',
+           'Black holes are regions with gravity so strong nothing can escape.',
+           'Stars are massive balls of plasma that produce their own light.',
+           'Galaxies contain billions of stars.',
+           'The Big Bang is the leading theory about how our universe started.'
+         ],
+         inspiration: [
+           'Every challenge is an opportunity to grow!',
+           'Your past doesn\'t define your future.',
+           'You are stronger than you think!',
+           'Dreams do come true - but you have to work for them!',
+           'The future is unwritten - go create it!'
+         ],
+         movies: [
+           'Movies are a great form of entertainment and storytelling!',
+           'Classics like the original Star Wars and Jaws changed cinema forever.',
+           'Marvel and DC have created massive cinematic universes.',
+           'Independent films often have the most creative and unique stories.',
+           'Film is the art of visual storytelling!'
+         ],
+         music: [
+           'Music brings people together and expresses emotions in unique ways.',
+           'Different genres appeal to different people - find what you love!',
+           'Playing an instrument is a great skill to develop.',
+           'Music can improve mood, focus, and overall well-being.',
+           'There\'s music for every moment of life!'
+         ],
+         books: [
+           'Reading is an excellent way to expand your knowledge and imagination.',
+           'Classics like "1984" and "Pride and Prejudice" are timeless.',
+           'Fantasy worlds like Harry Potter and Game of Thrones are amazing.',
+           'Self-help books can provide valuable life lessons.',
+           'Reading helps improve focus, vocabulary, and creativity!'
+         ],
+         food: [
+           'Food is not just fuel - it\'s art, culture, and pleasure!',
+           'Cooking is a fun hobby and essential life skill.',
+           'Different cuisines tell the stories of their cultures.',
+           'Healthy eating helps you feel better and live longer.',
+           'Farm-to-table cooking supports local communities!'
+         ],
+         sports: [
+           'Sports teach teamwork, discipline, and perseverance.',
+           'Whether you\'re a player or spectator, sports are exciting!',
+           'Different sports challenge different skills and abilities.',
+           'Exercise through sports is great for physical and mental health.',
+           'The Olympics showcase incredible human achievement!'
+         ],
+         travel: [
+           'Traveling expands your perspective and exposes you to new cultures.',
+           'Every destination has unique history, food, and experiences.',
+           'Travel planning is part of the fun and adventure!',
+           'Meeting people from different places is incredibly enriching.',
+           'The world is full of amazing places waiting to be explored!'
+         ],
+         history: [
+           'History helps us understand how the world came to be.',
+           'Learning from the past guides better decisions in the future.',
+           'Historical figures have shaped our world in profound ways.',
+           'Civilizations like Rome and Egypt were incredibly advanced.',
+           'Every country has a rich and unique history!'
+         ],
+         animals: [
+           'Animals are incredible creatures with unique abilities.',
+           'Protecting endangered species is important for our ecosystem.',
+           'Pets provide companionship, love, and unconditional support.',
+           'Wildlife documentaries reveal the beauty of nature.',
+           'Learning about animals helps us appreciate biodiversity!'
+         ],
+         philosophy: [
+           'Philosophy explores fundamental questions about life and existence.',
+           'Different philosophical schools offer various perspectives on life.',
+           'Thinking critically about ideas helps you grow.',
+           'Ancient philosophers like Socrates still influence us today.',
+           'Exploring philosophy can help define your values and beliefs!'
+         ],
+         productivity: [
+           'Breaking tasks into smaller steps makes them less overwhelming.',
+           'Setting clear goals helps you stay motivated and focused.',
+           'The Pomodoro Technique - work 25 mins, rest 5 mins - is very effective.',
+           'Prioritize important tasks and eliminate distractions.',
+           'Small progress every day leads to big results over time!'
+         ],
+         work: [
+           'Finding work you\'re passionate about makes all the difference.',
+           'Networking and building relationships is crucial in careers.',
+           'Professional development keeps you relevant and advancing.',
+           'Work-life balance is essential for long-term well-being.',
+           'Your career is a journey, not just a destination!'
+         ],
+         education: [
+           'Education opens doors and expands possibilities.',
+           'Learning is a lifelong journey that never stops.',
+           'Online courses make education accessible to everyone.',
+           'Schools teach more than subjects - they teach life skills.',
+           'The best teachers inspire curiosity and critical thinking!'
+         ],
+         hobbies: [
+           'Hobbies provide balance, stress relief, and joy.',
+           'Whether art, music, sports, or crafts - find what makes you happy!',
+           'Hobbies can turn into passions and even careers.',
+           'Making time for hobbies improves mental health and creativity.',
+           'The best hobbies are ones you lose track of time doing!'
+         ],
+         gaming: [
+           'Video games are interactive art that tells amazing stories.',
+           'Gaming builds problem-solving, strategy, and decision-making skills.',
+           'Multiplayer games create communities and friendships.',
+           'Board games and card games are great for social bonding.',
+           'Gaming is a legitimate form of entertainment and sport!'
+         ],
+         nature: [
+           'Nature is beautiful, powerful, and essential to our survival.',
+           'Spending time outdoors reduces stress and improves mood.',
+           'Forests, mountains, oceans and deserts each have unique beauty.',
+           'Protecting natural habitats protects countless species.',
+           'Nature teaches us about cycles, growth, and adaptation!'
+         ],
+         environment: [
+           'Climate change is one of the biggest challenges we face.',
+           'Reducing plastic use and recycling helps the environment.',
+           'Renewable energy like solar and wind are the future.',
+           'Every small action counts toward environmental protection.',
+           'We need to be stewards of our planet for future generations!'
+         ],
+         language: [
+           'Learning new languages opens up new ways of thinking.',
+           'Different languages have unique expressions and perspectives.',
+           'Bilingual people enjoy cognitive benefits and more opportunities.',
+           'Language learning takes patience and practice.',
+           'Every language is a gateway to another culture!'
+         ],
+         culture: [
+           'Every culture has valuable contributions to human civilization.',
+           'Understanding different cultures builds empathy and reduce conflicts.',
+           'Traditions and customs keep cultures alive and connected.',
+           'Cultural exchange leads to innovation and new ideas.',
+           'Celebrating diversity makes communities stronger!'
+         ],
+         creativity: [
+           'Creativity is the ability to see things in new ways.',
+           'Everyone has creative potential - it just needs practice.',
+           'Art, writing, music, and design all exercise creativity.',
+           'Constraints often spark the most creative solutions.',
+           'Being creative makes life more enjoyable and fulfilling!'
+         ],
+         confidence: [
+           'Confidence comes from believing in yourself and your abilities.',
+           'Practice and preparation build true confidence.',
+           'Failure is a step toward success, not the end.',
+           'You are worthy of good things and success.',
+           'Confidence attracts opportunities and positive people!'
+         ],
+         success: [
+           'Success looks different for everyone - define yours!',
+           'Success requires hard work, persistence, and sometimes luck.',
+           'Celebrate small wins on your way to bigger goals.',
+           'Failures teach more than successes.',
+           'Your definition of success is what matters most!'
+         ],
+         problem_solving: [
+           'Break complex problems into smaller, manageable parts.',
+           'Don\'t be afraid to try different approaches.',
+           'Sometimes the best solutions come from unexpected directions.',
+           'Ask for help and perspectives - two minds are better than one!',
+           'Problem-solving skills improve with practice and experience!'
+         ],
+         friendship: [
+           'True friends support you through thick and thin.',
+           'Good friendships require time, effort, and honesty.',
+           'Surrounding yourself with positive people lifts you up.',
+           'Friends challenge you to be better and celebrate your wins.',
+           'Friendship is one of life\'s greatest treasures!'
+         ],
+         happiness: [
+           'Happiness comes from within and from meaningful connections.',
+           'Small moments and gratitude often bring the most joy.',
+           'Pursuing happiness directly rarely works - pursue meaning instead.',
+           'Acts of kindness toward others create happiness for everyone.',
+           'True happiness is a journey, not a destination!'
+         ],
+         fear: [
+           'Fear is normal - what matters is how you respond to it.',
+           'Often what we fear most never actually happens.',
+           'Courage isn\'t the absence of fear - it\'s acting despite it.',
+           'Face your fears gradually - growth happens at the edge of discomfort.',
+           'You are braver than you believe!'
+         ],
+         change: [
+           'Change is the only constant in life.',
+           'Embracing change leads to growth and new opportunities.',
+           'Change can be scary, but resistance makes it harder.',
+           'Every major accomplishment required change.',
+           'Be the change you want to see in the world!'
+         ],
+         learning: [
+           'The most successful people are lifelong learners.',
+           'There are countless ways to learn - formal, informal, experiential.',
+           'Mistakes are valuable learning opportunities.',
+           'Teaching others is one of the best ways to solidify your own learning.',
+           'Curiosity is the fuel for growth and learning!'
+         ],
+         patience: [
+           'Good things take time - patience is a virtue.',
+           'Rushing rarely leads to good results.',
+           'Patience paired with action creates sustainable progress.',
+           'Learning to be patient with yourself is as important as patience with others.',
+           'Trust the process and be patient with your journey!'
+         ],
+         default: [
+           'That\'s an interesting question! I\'m still learning, but I\'ll do my best.',
+           'Hmm, let me think about that...',
+           'I\'m not sure about that, but it sounds intriguing!',
+           'That\'s a great question! Can you tell me more?',
+           'Tell me more about that - I\'d love to know more!',
+           'That\'s fascinating! What else would you like to know?',
+           'Interesting perspective! I hadn\'t thought about it that way.',
+           'Got it! Anything else I can help with?'
+         ]
+       };
+
+       function getAIResponse(userMessage) {
+         const message = userMessage.toLowerCase().trim();
+
+         // Check for greetings
+         if (/^(hello|hi|hey|greetings|yo|howdy|sup|hiya)$/i.test(message)) {
+           return aiResponses.greeting[Math.floor(Math.random() * aiResponses.greeting.length)];
+         }
+
+         // Check for farewells
+         if (/(bye|goodbye|see you|farewell|exit|quit|see ya|later|cya)/.test(message)) {
+           return aiResponses.farewell[Math.floor(Math.random() * aiResponses.farewell.length)];
+         }
+
+         // Check for thanks
+         if (/(thanks|thank you|appreciate|gratitude|thanx|thx)/.test(message)) {
+           return aiResponses.thanks[Math.floor(Math.random() * aiResponses.thanks.length)];
+         }
+
+         // Check for help requests
+         if (/(help|what can you do|commands|features|capabilities|what can i ask)/.test(message)) {
+           return aiResponses.help[Math.floor(Math.random() * aiResponses.help.length)];
+         }
+
+         // Check for "how are you"
+         if (/(how are you|how are ya|how do you feel|how's it going)/.test(message)) {
+           return aiResponses.howami[Math.floor(Math.random() * aiResponses.howami.length)];
+         }
+
+         // Check for name/identity
+         if (/(who are you|what's your name|your name|what do i call you)/.test(message)) {
+           return aiResponses.name[Math.floor(Math.random() * aiResponses.name.length)];
+         }
+
+         // Check for time requests
+         if (/(what.*time|current time|tell me the time|what is the time)/.test(message)) {
+           return aiResponses.time[Math.floor(Math.random() * aiResponses.time.length)];
+         }
+
+         // Check for date requests
+         if (/(what.*date|current date|tell me the date|what is the date|today's date|today is)/.test(message)) {
+           return aiResponses.date[Math.floor(Math.random() * aiResponses.date.length)];
+         }
+
+         // Check for weather requests
+         if (/(weather|temperature|forecast|rain|snow|cloud|sunny|hot|cold|humidity)/.test(message)) {
+           return aiResponses.weather[Math.floor(Math.random() * aiResponses.weather.length)];
+         }
+
+         // Check for joke requests
+         if (/(joke|funny|make me laugh|tell me a joke|lol|haha|laugh)/.test(message)) {
+           return aiResponses.joke[Math.floor(Math.random() * aiResponses.joke.length)];
+         }
+
+         // Check for fun fact requests
+         if (/(fun fact|did you know|fact|trivia|interesting)/.test(message)) {
+           return aiResponses.funfact[Math.floor(Math.random() * aiResponses.funfact.length)];
+         }
+
+         // Check for riddles
+         if (/(riddle|puzzle|guess|brain teaser)/.test(message)) {
+           return aiResponses.riddle[Math.floor(Math.random() * aiResponses.riddle.length)];
+         }
+
+         // Check for motivation/encouragement
+         if (/(motivat|encour|inspire|can i do it|will i succeed|believe|strength|power)/.test(message)) {
+           return aiResponses.motivation[Math.floor(Math.random() * aiResponses.motivation.length)];
+         }
+
+         // Check for inspiration
+         if (/(inspiration|inspire|motivate|encourage|uplift|cheer)/.test(message)) {
+           return aiResponses.inspiration[Math.floor(Math.random() * aiResponses.inspiration.length)];
+         }
+
+         // Check for programming/code questions
+         if (/(python|javascript|html|css|code|program|function|variable|loop|algorithm|debug|developer|coding)/.test(message)) {
+           return aiResponses.programming[Math.floor(Math.random() * aiResponses.programming.length)];
+         }
+
+         // Check for science questions
+         if (/(physics|chemistry|biology|science|atom|molecule|element|reaction|quantum)/.test(message)) {
+           return aiResponses.science[Math.floor(Math.random() * aiResponses.science.length)];
+         }
+
+         // Check for tech questions
+         if (/(technology|ai|artificial intelligence|machine learning|cloud|cybersecurity|blockchain|crypto|bitcoin)/.test(message)) {
+           return aiResponses.tech[Math.floor(Math.random() * aiResponses.tech.length)];
+         }
+
+         // Check for planet/space questions
+         if (/(mars|venus|jupiter|saturn|earth|planet|asteroid)/.test(message)) {
+           return aiResponses.planet[Math.floor(Math.random() * aiResponses.planet.length)];
+         }
+
+         // Check for space/universe questions
+         if (/(space|universe|star|galaxy|black hole|big bang|astronaut|rocket|moon)/.test(message)) {
+           return aiResponses.space[Math.floor(Math.random() * aiResponses.space.length)];
+         }
+
+         // Check for advice/wellness
+         if (/(advice|help me|should i|how do i|wellness|health|sleep|exercise|water|mental health)/.test(message)) {
+           return aiResponses.advice[Math.floor(Math.random() * aiResponses.advice.length)];
+         }
+
+         // Check for love/emotion
+         if (/(love|like|care|emotion|feel|happy|sad|angry)/.test(message)) {
+           return aiResponses.love[Math.floor(Math.random() * aiResponses.love.length)];
+         }
+
+         // Check for movies/entertainment
+         if (/(movie|film|cinema|watch|actor|actress|tv|show|series|netflix|drama)/.test(message)) {
+           return aiResponses.movies[Math.floor(Math.random() * aiResponses.movies.length)];
+         }
+
+         // Check for music
+         if (/(music|song|artist|band|sing|listen|album|melody|rhythm|record)/.test(message)) {
+           return aiResponses.music[Math.floor(Math.random() * aiResponses.music.length)];
+         }
+
+         // Check for books/reading
+         if (/(book|read|novel|author|story|literature|chapter|page|novel|fiction)/.test(message)) {
+           return aiResponses.books[Math.floor(Math.random() * aiResponses.books.length)];
+         }
+
+         // Check for food
+         if (/(food|eat|cook|cooking|recipe|restaurant|cuisine|meal|lunch|dinner|breakfast|taste|flavor)/.test(message)) {
+           return aiResponses.food[Math.floor(Math.random() * aiResponses.food.length)];
+         }
+
+         // Check for sports
+         if (/(sport|game|play|player|team|football|basketball|soccer|tennis|athlete|competition|championship)/.test(message)) {
+           return aiResponses.sports[Math.floor(Math.random() * aiResponses.sports.length)];
+         }
+
+         // Check for travel
+         if (/(travel|trip|visit|destination|vacation|explore|journey|flight|hotel|tourist|location)/.test(message)) {
+           return aiResponses.travel[Math.floor(Math.random() * aiResponses.travel.length)];
+         }
+
+         // Check for history
+         if (/(history|historical|past|ancient|war|revolution|civilization|empire|century|era|timeline)/.test(message)) {
+           return aiResponses.history[Math.floor(Math.random() * aiResponses.history.length)];
+         }
+
+         // Check for animals
+         if (/(animal|pet|dog|cat|bird|fish|wildlife|zoo|creature|species|insect|mammal)/.test(message)) {
+           return aiResponses.animals[Math.floor(Math.random() * aiResponses.animals.length)];
+         }
+
+         // Check for philosophy
+         if (/(philosophy|philosophical|think|argue|ethics|morals|values|wisdom|truth|meaning|existence)/.test(message)) {
+           return aiResponses.philosophy[Math.floor(Math.random() * aiResponses.philosophy.length)];
+         }
+
+         // Check for productivity
+         if (/(productivity|productive|efficient|goal|manage|organize|plan|schedule|focus|distract)/.test(message)) {
+           return aiResponses.productivity[Math.floor(Math.random() * aiResponses.productivity.length)];
+         }
+
+         // Check for work/career
+         if (/(work|job|career|profession|business|company|office|employ|boss|skill|interview)/.test(message)) {
+           return aiResponses.work[Math.floor(Math.random() * aiResponses.work.length)];
+         }
+
+         // Check for education
+         if (/(education|school|university|college|study|learn|student|teacher|course|study|knowledge)/.test(message)) {
+           return aiResponses.education[Math.floor(Math.random() * aiResponses.education.length)];
+         }
+
+         // Check for hobbies
+         if (/(hobby|hobbies|craft|interest|passion|activity|enjoy|fun|relax|recreation)/.test(message)) {
+           return aiResponses.hobbies[Math.floor(Math.random() * aiResponses.hobbies.length)];
+         }
+
+         // Check for gaming
+         if (/(game|gaming|video game|play|level|win|lose|score|character|quest|rpg|shooter|console)/.test(message)) {
+           return aiResponses.gaming[Math.floor(Math.random() * aiResponses.gaming.length)];
+         }
+
+         // Check for nature
+         if (/(nature|natural|forest|mountain|ocean|river|weather|outdoor|hiking|camping|park|wildlife)/.test(message)) {
+           return aiResponses.nature[Math.floor(Math.random() * aiResponses.nature.length)];
+         }
+
+         // Check for environment
+         if (/(environment|environmental|climate|green|eco|recycle|sustainable|pollution|carbon|renewable)/.test(message)) {
+           return aiResponses.environment[Math.floor(Math.random() * aiResponses.environment.length)];
+         }
+
+         // Check for languages
+         if (/(language|speak|accent|dialect|grammar|word|sentence|vocabulary|translate|bilingual)/.test(message)) {
+           return aiResponses.language[Math.floor(Math.random() * aiResponses.language.length)];
+         }
+
+         // Check for culture
+         if (/(culture|cultural|tradition|custom|festival|celebrate|heritage|diversity|ethnic|community)/.test(message)) {
+           return aiResponses.culture[Math.floor(Math.random() * aiResponses.culture.length)];
+         }
+
+         // Check for creativity
+         if (/(creative|creativity|art|design|imagine|create|innovation|idea|artistic|draw|paint)/.test(message)) {
+           return aiResponses.creativity[Math.floor(Math.random() * aiResponses.creativity.length)];
+         }
+
+         // Check for confidence
+         if (/(confidence|confident|insecure|self-doubt|believe in|self esteem|self worth|shy|bold)/.test(message)) {
+           return aiResponses.confidence[Math.floor(Math.random() * aiResponses.confidence.length)];
+         }
+
+         // Check for success
+         if (/(success|succeed|successful|achieve|accomplish|win|victory|triumph|goal|accomplish)/.test(message)) {
+           return aiResponses.success[Math.floor(Math.random() * aiResponses.success.length)];
+         }
+
+         // Check for problem-solving
+         if (/(problem|solve|solution|challenge|difficult|stuck|help|figure out|overcome)/.test(message)) {
+           return aiResponses.problem_solving[Math.floor(Math.random() * aiResponses.problem_solving.length)];
+         }
+
+         // Check for friendship
+         if (/(friend|friendship|best friend|companion|bond|connection|relate|support)/.test(message)) {
+           return aiResponses.friendship[Math.floor(Math.random() * aiResponses.friendship.length)];
+         }
+
+         // Check for happiness
+         if (/(happy|happiness|glad|joy|joyful|content|satisfaction|smile|laugh)/.test(message)) {
+           return aiResponses.happiness[Math.floor(Math.random() * aiResponses.happiness.length)];
+         }
+
+         // Check for fear
+         if (/(fear|afraid|scared|anxiety|anxious|worry|concerned|nervous|terror|frighten)/.test(message)) {
+           return aiResponses.fear[Math.floor(Math.random() * aiResponses.fear.length)];
+         }
+
+         // Check for change
+         if (/(change|different|transform|adapt|evolve|shift|transition|new|growth|develop)/.test(message)) {
+           return aiResponses.change[Math.floor(Math.random() * aiResponses.change.length)];
+         }
+
+         // Check for learning
+         if (/(learn|learning|education|knowledge|study|understand|discover|master|teach|skill)/.test(message)) {
+           return aiResponses.learning[Math.floor(Math.random() * aiResponses.learning.length)];
+         }
+
+         // Check for patience
+         if (/(patience|patient|wait|hurry|rush|slow|time|take time|impatient)/.test(message)) {
+           return aiResponses.patience[Math.floor(Math.random() * aiResponses.patience.length)];
+         }
+
+         // Check for math
+         if (/^\d+\s*[\+\-\*\/]\s*\d+/.test(message)) {
+           try {
+             const result = Function('"use strict"; return (' + message + ')')();
+             return `The answer is: ${result}`;
+           } catch (e) {
+             return 'I couldn\'t calculate that. Please check the format.';
+           }
+         }
+
+         // Check for general questions about life
+         if (/(life|exist|meaning|purpose|why|how|what)/.test(message) && message.length > 5) {
+           return 'That\'s a profound question! The answer might be different for everyone. What\'s your perspective?';
+         }
+
+         // Default response
+         return aiResponses.default[Math.floor(Math.random() * aiResponses.default.length)];
+       }
+
+       function sendMessage() {
+         const input = document.getElementById('userInput');
+         const message = input.value.trim();
+
+         if (!message) return;
+
+         // Add user message
+         addChatMessage(message, 'user');
+         input.value = '';
+
+         // Show typing indicator
+         showTypingIndicator();
+
+         // Simulate AI thinking time
+         setTimeout(() => {
+           removeTypingIndicator();
+           const response = getAIResponse(message);
+           addChatMessage(response, 'ai');
+         }, 500 + Math.random() * 1000);
+       }
+
+       function handleChatKeypress(event) {
+         if (event.key === 'Enter') {
+           sendMessage();
+         }
+       }
+
+       function addChatMessage(text, sender) {
+         const chatMessages = document.getElementById('chatMessages');
+         const messageDiv = document.createElement('div');
+         messageDiv.className = `message ${sender}`;
+
+         const contentDiv = document.createElement('div');
+         contentDiv.className = 'message-content';
+         contentDiv.textContent = text;
+
+         messageDiv.appendChild(contentDiv);
+         chatMessages.appendChild(messageDiv);
+         chatMessages.scrollTop = chatMessages.scrollHeight;
+       }
+
+       function showTypingIndicator() {
+         const chatMessages = document.getElementById('chatMessages');
+         const messageDiv = document.createElement('div');
+         messageDiv.className = 'message ai';
+         messageDiv.id = 'typing-indicator';
+
+         const typingDiv = document.createElement('div');
+         typingDiv.className = 'typing-indicator';
+         typingDiv.innerHTML = '<span></span><span></span><span></span>';
+
+         messageDiv.appendChild(typingDiv);
+         chatMessages.appendChild(messageDiv);
+         chatMessages.scrollTop = chatMessages.scrollHeight;
+       }
+
+       function removeTypingIndicator() {
+         const typingIndicator = document.getElementById('typing-indicator');
+         if (typingIndicator) {
+           typingIndicator.remove();
+         }
+       }
+
+       // Greet user on page load
+       window.addEventListener('load', () => {
+         setTimeout(() => {
+           addChatMessage('Welcome! I\'m your AI assistant. How can I help you?', 'ai');
+         }, 500);
+       });
+     </script>
+  </body>
+</html>
