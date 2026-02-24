@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+  <title>404 Not Found</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Sample website showcasing modern web design, responsive layouts, and SEO-friendly structure. Explore a clean, fast, and mobile-ready demo site.">
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico"/>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+<script>
+  window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
+  </head>
+  <style>
+  html {
+    margin: 0;
+    padding: 0;
+  }
+    body {
+      margin: 0;
+      background: radial-gradient(circle at top, #0f172a, #020617);
+      color: white;
+      font-family: 'Inter', sans-serif;
+      text-align: center;
+    }
+    h1 {
+      margin-top: 20px;
+      font-size: 48px;
+      letter-spacing: 2px;
+    }
+    canvas {
+      background: #0b1220;
+      margin-top: 20px;
+      border: 2px solid #00ffcc;
+      box-shadow: 0 0 25px #00ffcc55;
+    }
+    #hud {
+      margin-top: 10px;
+      font-size: 18px;
+    }
+    #overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      background: rgba(0,0,0,0.7);
+      font-size: 22px;
+    }
+    #gameContainer {
+      position: relative;
+      display: inline-block;
+    }
+    button {
+      padding: 10px 18px;
+      margin-top: 15px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      background: #00ffcc;
+      color: black;
+      cursor: pointer;
+    }
+    button:hover {
+      opacity: 0.85;
+    }
+    a {
+      display: inline-block;
+      margin-top: 25px;
+      color: #00ffcc;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .hint {
+      margin-top: 8px;
+      font-size: 14px;
+      opacity: 0.7;
+    }
+  </style>
+</head>
+<body>
+
+<h1>404 - Not Found</h1>
+<p>This page does not exist, but this game does</p>
+
+<div id="gameContainer">
+  <canvas id="game" width="320" height="320"></canvas>
+
+  <div id="overlay">
+    <div id="overlayText">
+      Press SPACE to Start
+      <div class="hint">Arrow Keys or WASD to move<br/>Press P to pause</div>
+    </div>
+    <button id="restartBtn" style="display:none;">Play Again</button>
+  </div>
+</div>
+
+<div id="hud">
+  Score: <span id="score">0</span> |
+  High Score: <span id="highScore">0</span>
+</div>
+
+<a href="index.html">Return Home</a>
+
+<script>
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+const overlay = document.getElementById("overlay");
+const overlayText = document.getElementById("overlayText");
+const restartBtn = document.getElementById("restartBtn");
+
+const box = 16;
+const rows = canvas.width / box;
+
+let snake, food, direction, nextDirection, score, speed;
+let state = "start"; // start | playing | paused | gameover
+let lastTime = 0;
+let accumulator = 0;
+
+const highScoreEl = document.getElementById("highScore");
+const savedHigh = localStorage.getItem("snakeHighScore") || 0;
+highScoreEl.innerText = savedHigh;
+
+// ----------------- Game Initialization -----------------
+function initGame() {
+  snake = [{ x: 10 * box, y: 10 * box }];
+  food = randomFood();
+  direction = "RIGHT";
+  nextDirection = null;
+  score = 0;
+  speed = 120;
+  document.getElementById("score").innerText = score;
+}
+
+// ----------------- Input Handling -----------------
+document.addEventListener("keydown", e => {
+  const key = e.key.toLowerCase();
+
+  if (state === "start" && key === " ") startGame();
+  if (state === "gameover" && key === " ") startGame();
+
+  if (key === "p" && state === "playing") pauseGame();
+  else if (key === "p" && state === "paused") resumeGame();
+
+  if (state !== "playing") return;
+
+  let newDir = null;
+  if (key === "arrowup" || key === "w") newDir = "UP";
+  if (key === "arrowdown" || key === "s") newDir = "DOWN";
+  if (key === "arrowleft" || key === "a") newDir = "LEFT";
+  if (key === "arrowright" || key === "d") newDir = "RIGHT";
+
+  if (!newDir) return;
+
+  const opposite =
+    (direction === "UP" && newDir === "DOWN") ||
+    (direction === "DOWN" && newDir === "UP") ||
+    (direction === "LEFT" && newDir === "RIGHT") ||
+    (direction === "RIGHT" && newDir === "LEFT");
+
+  if (!opposite) nextDirection = newDir; // input buffer
+});
+
+restartBtn.onclick = startGame;
+
+// ----------------- Game Loop -----------------
+function gameLoop(timestamp) {
+  requestAnimationFrame(gameLoop);
+
+  if (state !== "playing") return;
+
+  if (!lastTime) lastTime = timestamp;
+  const delta = timestamp - lastTime;
+  lastTime = timestamp;
+
+  accumulator += delta;
+
+  if (accumulator > speed) {
+    update();
+    accumulator = 0;
+  }
+
+  render();
+}
+
+// ----------------- Update -----------------
+function update() {
+  if (nextDirection) { direction = nextDirection; nextDirection = null; }
+
+  let head = { ...snake[0] };
+
+  if (direction === "UP") head.y -= box;
+  if (direction === "DOWN") head.y += box;
+  if (direction === "LEFT") head.x -= box;
+  if (direction === "RIGHT") head.x += box;
+
+  if (head.x < 0 || head.y < 0 || head.x >= canvas.width || head.y >= canvas.height || collision(head, snake)) {
+    endGame();
+    return;
+  }
+
+  snake.unshift(head);
+
+  if (head.x === food.x && head.y === food.y) {
+    score++;
+    document.getElementById("score").innerText = score;
+    food = randomFood();
+
+    if (score % 5 === 0 && speed > 60) speed -= 10;
+  } else {
+    snake.pop();
+  }
+}
+
+// ----------------- Render -----------------
+function render() {
+  ctx.fillStyle = "#0b1220";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  ctx.shadowBlur = 15;
+  ctx.shadowColor = "#00ffcc";
+
+  snake.forEach((segment, index) => {
+    ctx.fillStyle = index === 0 ? "#00ffcc" : "#00cc99";
+    ctx.fillRect(segment.x, segment.y, box, box);
+  });
+
+  ctx.shadowBlur = 0;
+
+  ctx.fillStyle = "#ff0055";
+  ctx.fillRect(food.x, food.y, box, box);
+}
+
+// ----------------- Collision -----------------
+function collision(head, body) {
+  return body.some(segment => segment.x === head.x && segment.y === head.y);
+}
+
+// ----------------- Game State -----------------
+function startGame() {
+  state = "playing";
+  overlay.style.display = "none";
+  restartBtn.style.display = "none";
+  initGame();
+}
+
+function pauseGame() {
+  state = "paused";
+  overlay.style.display = "flex";
+  overlayText.innerHTML = "Paused<br/><div class='hint'>Press P to Resume</div>";
+}
+
+function resumeGame() {
+  state = "playing";
+  overlay.style.display = "none";
+}
+
+function endGame() {
+  state = "gameover";
+  overlay.style.display = "flex";
+  overlayText.innerHTML = "Game Over";
+  restartBtn.style.display = "block";
+
+  const currentHigh = localStorage.getItem("snakeHighScore") || 0;
+  if (score > currentHigh) {
+    localStorage.setItem("snakeHighScore", score);
+    highScoreEl.innerText = score;
+  }
+}
+
+// ----------------- Food -----------------
+function randomFood() {
+  return {
+    x: Math.floor(Math.random() * rows) * box,
+    y: Math.floor(Math.random() * rows) * box
+  };
+}
+
+// ----------------- Start the loop -----------------
+requestAnimationFrame(gameLoop);
+</script>
+
+</body>
+</html>

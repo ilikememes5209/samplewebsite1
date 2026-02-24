@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en-US" style="background-color:black;">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML Editor | Sample Website</title>
+    <meta name="description" content="Sample website showcasing modern web design, responsive layouts, and SEO-friendly structure. Explore a clean, fast, and mobile-ready demo site.">
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico"/>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <script>
+      window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
+    <style>
+      .editor-container {
+        display: flex;
+        height: calc(100vh - 200px);
+        gap: 10px;
+        padding: 10px;
+        margin: 0;
+      }
+
+      .editor-panel {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        background-color: #1a1a1a;
+        border: 2px solid #129db3;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      .editor-header {
+        background-color: #0d0d0d;
+        padding: 10px 15px;
+        border-bottom: 1px solid #129db3;
+        color: #129db3;
+        font-weight: bold;
+        font-size: 14px;
+      }
+
+      #html-input {
+        flex: 1;
+        padding: 15px;
+        background-color: #0d0d0d;
+        color: #00ff00;
+        font-family: 'Courier New', monospace;
+        font-size: 13px;
+        border: none;
+        resize: none;
+        outline: none;
+        line-height: 1.5;
+        caret-color: #129db3;
+      }
+
+      #html-input::placeholder {
+        color: #555555;
+      }
+
+      .preview-panel {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        background-color: #1a1a1a;
+        border: 2px solid #129db3;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      #preview-frame {
+        flex: 1;
+        border: none;
+        background-color: white;
+      }
+
+      .editor-controls {
+        display: flex;
+        gap: 10px;
+        padding: 10px 15px;
+        background-color: #0d0d0d;
+        border-top: 1px solid #129db3;
+        flex-wrap: wrap;
+      }
+
+      .editor-btn {
+        padding: 8px 15px;
+        background-color: #129db3;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-family: inter;
+        font-size: 12px;
+        font-weight: 600;
+        transition: background-color 0.2s ease;
+      }
+
+      .editor-btn:hover {
+        background-color: #0a7a8a;
+      }
+
+      .editor-btn:active {
+        transform: scale(0.98);
+      }
+
+      .char-count {
+        color: #129db3;
+        font-family: inter;
+        font-size: 12px;
+        align-self: center;
+      }
+
+      @media (max-width: 900px) {
+        .editor-container {
+          flex-direction: column;
+          height: auto;
+          min-height: calc(100vh - 200px);
+        }
+
+        .editor-panel,
+        .preview-panel {
+          min-height: 400px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="main-header">
+      <button class="hamburger" onclick="toggleMenu()">☰</button>
+      <nav class="nav-links">
+        <a class="pagelink" href="index.html">Home</a>
+        <a class="pagelink" href="page1.html">About Us</a>
+        <a class="pagelink" href="page2.html">Download</a>
+        <a class="pagelink" href="page3.html">Calculator</a>
+        <a class="pagelink" href="page4.html">Game</a>
+        <a class="pagelink" href="page5.html">CMD Line</a>
+        <a class="pagelink" href="page6.html">Map</a>
+        <a class="pagelink" href="page7.html">AI</a>
+        <a class="pagelink" href="page8.html">Notes</a>
+        <a class="pagelink" href="page9.html">Portfolio</a>
+        <a class="pagelink" href="page10.html">HTML Editor</a>
+      </nav>
+      <span id="time-display" class="time-display"></span>
+    </header>
+
+    <div class="image-container">
+      <img src="photo-1461749280684-dccba630e2f6.avif" fetchpriority="high" alt="picture of code"> 
+      <h1>HTML Editor</h1>
+    </div>
+
+    <div class="editor-container">
+      <div class="editor-panel">
+        <div class="editor-header">HTML Code</div>
+        <textarea 
+          id="html-input" 
+          placeholder="Enter your HTML code here...&#10;&#10;&lt;!DOCTYPE html&gt;&#10;&lt;html&gt;&#10;&lt;head&gt;&#10;  &lt;title&gt;My Page&lt;/title&gt;&#10;&lt;/head&gt;&#10;&lt;body&gt;&#10;  &lt;h1&gt;Hello World&lt;/h1&gt;&#10;&lt;/body&gt;&#10;&lt;/html&gt;"
+        ></textarea>
+        <div class="editor-controls">
+          <button class="editor-btn" onclick="updatePreview()">Preview</button>
+          <button class="editor-btn" onclick="clearEditor()">Clear</button>
+          <button class="editor-btn" onclick="downloadHTML()">Download</button>
+          <button class="editor-btn" onclick="copyCode()">Copy</button>
+          <span class="char-count" id="char-count">Characters: 0</span>
+        </div>
+      </div>
+
+      <div class="preview-panel">
+        <div class="editor-header">Preview</div>
+        <iframe id="preview-frame"></iframe>
+      </div>
+    </div>
+
+    <footer class="footertext">
+      <p>Copyright 2026</p>
+      <p>Contact us at <a class="footerlink" href="mailto:coltonblake125@gmail.com">Email Us</a></p>
+      <p>Made by Colton Blake</p>
+    </footer>
+
+    <script>
+      const htmlInput = document.getElementById('html-input');
+      const previewFrame = document.getElementById('preview-frame');
+      const charCount = document.getElementById('char-count');
+
+      // Update character count as user types
+      htmlInput.addEventListener('input', () => {
+        charCount.textContent = `Characters: ${htmlInput.value.length}`;
+      });
+
+      // Auto-update preview as user types (debounced)
+      let debounceTimer;
+      htmlInput.addEventListener('input', () => {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(updatePreview, 500);
+      });
+
+      function updatePreview() {
+        const htmlContent = htmlInput.value;
+        const doc = previewFrame.contentDocument || previewFrame.contentWindow.document;
+        doc.open();
+        doc.write(htmlContent);
+        doc.close();
+      }
+
+      function clearEditor() {
+        if (confirm('Are you sure you want to clear all code?')) {
+          htmlInput.value = '';
+          charCount.textContent = 'Characters: 0';
+          updatePreview();
+        }
+      }
+
+      function downloadHTML() {
+        const htmlContent = htmlInput.value;
+        const element = document.createElement('a');
+        element.setAttribute('href', 'data:text/html;charset=utf-8,' + encodeURIComponent(htmlContent));
+        element.setAttribute('download', 'index.html');
+        element.style.display = 'none';
+        document.body.appendChild(element);
+        element.click();
+        document.body.removeChild(element);
+      }
+
+      // Initialize preview on page load
+      window.addEventListener('DOMContentLoaded', () => {
+        updatePreview();
+      });
+      // Save to local storage on input
+htmlInput.addEventListener('input', () => {
+  localStorage.setItem('savedCode', htmlInput.value);
+});
+
+// Load from local storage on page load
+window.addEventListener('DOMContentLoaded', () => {
+  const savedCode = localStorage.getItem('savedCode');
+  if (savedCode) {
+    htmlInput.value = savedCode;
+    charCount.textContent = `Characters: ${savedCode.length}`;
+    updatePreview();
+  }
+});
+htmlInput.addEventListener('keydown', function(e) {
+  if (e.key === 'Tab') {
+    e.preventDefault();
+    const start = this.selectionStart;
+    const end = this.selectionEnd;
+
+    // Set textarea value to: text before caret + tab + text after caret
+    this.value = this.value.substring(0, start) + "  " + this.value.substring(end);
+
+    // Put caret in right position
+    this.selectionStart = this.selectionEnd = start + 2;
+  }
+});
+function copyCode() {
+  htmlInput.select();
+  document.execCommand('copy');
+  alert('Code copied to clipboard!');
+}
+    </script>
+    <script src="script.js"></script>
+  </body>
+</html>
